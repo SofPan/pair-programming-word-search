@@ -16,6 +16,16 @@ const transposeArray = (arr) => {
   return reversed;
 };
 
+// check the joined sub arrays for the required word
+const checkIfWordIncluded = (joinedArr, word) => {
+  for (const subString of joinedArr) {
+    if (subString.includes(word)) {
+      return true;
+    }
+  }
+
+  return false;
+};
 
 const wordSearch = (letters, word) => {
   // if array is empty, return false
@@ -24,18 +34,13 @@ const wordSearch = (letters, word) => {
   // map and join letters horizontally
   const horizontalJoin = mapAndJoinLetters(letters);
   // transpose, and map and join letters vertically
-  const verticalJoin = mapAndJoinLetters(transposeArray(letters));
+  const transposed = transposeArray(letters);
+  const verticalJoin = mapAndJoinLetters(transposed);
 
-  // both horizontal and vertical arrays are the same length
-  // loop over both and check if the sub-arrays include the word, then return
-  for (let i = 0; i < horizontalJoin.length; i++) {
-    if (horizontalJoin[i].includes(word)
-      || verticalJoin[i].includes(word)) {
-      return true;
-    }
-  }
+  const checkHorizontal = checkIfWordIncluded(horizontalJoin, word);
 
-  return false;
+  // if horizontal check is false, check vertically. Otherwise return true.
+  return !checkHorizontal ? checkIfWordIncluded(verticalJoin, word) : true;
 };
 
 module.exports = wordSearch;
