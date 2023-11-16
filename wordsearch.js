@@ -1,26 +1,38 @@
+// map over each sub-array and join the letters
 const mapAndJoinLetters = (arr) => {
   return arr.map(ls => ls.join(''));
 };
 
-const wordSearch = (letters, word) => {
-  if (letters.length === 0) return false;
-  const horizontalJoin = mapAndJoinLetters(letters);
-  for (const l of horizontalJoin) {
-    if (l.includes(word)) return true;
-  }
+// transpose the array when checking vertically
+const transposeArray = (arr) => {
+  const reversed = [];
 
-  let reveresedMatrix = [];
-
-  for (let i = 0; i < letters[0].length; i++) {
-    reveresedMatrix[i] = [];
-    for (let j = 0; j < letters.length; j++) {
-      reveresedMatrix[i].push(letters[j][i]);
+  for (let i = 0; i < arr[0].length; i++) {
+    reversed[i] = [];
+    for (let j = 0; j < arr.length; j++) {
+      reversed[i].push(arr[j][i]);
     }
   }
+  return reversed;
+};
 
-  const verticalJoin = mapAndJoinLetters(reveresedMatrix);
-  for (const l of verticalJoin) {
-    if (l.includes(word)) return true;
+
+const wordSearch = (letters, word) => {
+  // if array is empty, return false
+  if (letters.length === 0) return false;
+
+  // map and join letters horizontally
+  const horizontalJoin = mapAndJoinLetters(letters);
+  // transpose, and map and join letters vertically
+  const verticalJoin = mapAndJoinLetters(transposeArray(letters));
+
+  // both horizontal and vertical arrays are the same length
+  // loop over both and check if the sub-arrays include the word, then return
+  for (let i = 0; i < horizontalJoin.length; i++) {
+    if (horizontalJoin[i].includes(word)
+      || verticalJoin[i].includes(word)) {
+      return true;
+    }
   }
 
   return false;
